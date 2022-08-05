@@ -1,0 +1,91 @@
+﻿@inject SignInManager<ApplicationUser> SignInManager
+@inject IAuthorizationService AuthorizationService
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro">
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/site.css" rel="stylesheet" />
+    <title>MusicDuct</title>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index" asp-area="">
+                <img src="~/Images/Icons/mdlogo.png" width="30" height="30" alt="logo">MusicDuct
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index" asp-area="">Home<span class="sr-only" asp-area="">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Contact" asp-action="Index" asp-area="">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        @await Component.InvokeAsync("CategoryMenu")
+                    </li>
+                    <li>
+                        <form class="input-group mb-3 my-2 my-lg-0" asp-controller="Product" asp-action="List" method="get" asp-area="">
+                            <input class="form-control" type="search" placeholder="Search" aria-label="Search"
+                                   name="SearchString" />
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </li>
+
+                    @if (User.IsInRole(AuthorizationConstants.Roles.ADMINISTRATORS) || User.IsInRole(AuthorizationConstants.Roles.MANAGERS))
+                    {
+                        <li class="nav-item dropdown text-white-50">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropDownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Admin Pannel
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropDownMenuLink">
+                                <a class="dropdown-item" asp-area="Manage" asp-action="Index" asp-controller="Category">Categories</a>
+                                <a class="dropdown-item" asp-area="Manage" asp-action="Index" asp-controller="Product">Products</a>
+                                @if (User.IsInRole(AuthorizationConstants.Roles.ADMINISTRATORS))
+                                {
+                                    <a class="dropdown-item" asp-area="Manage" asp-action="Index" asp-controller="Role">Roles</a>
+                                    <a class="dropdown-item" asp-area="Manage" asp-action="Index" asp-controller="User">Users</a>
+                                }
+                            </div>
+                        </li>
+                    }
+                    </ul>
+                <ul class="navbar-nav ml-md-auto">
+                    <li class="pr-md-2">
+                        @await Component.InvokeAsync("ShoppingCartSummary")
+                    </li>
+                    <li>
+                        <partial name="_LoginPartial" />
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; 2022 - MusicDuct</p>
+        </footer>
+    </div>
+    @RenderSection("scripts", required: false)
+
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

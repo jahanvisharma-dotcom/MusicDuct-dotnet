@@ -1,0 +1,11 @@
+﻿@model ProductsListViewModel
+
+
+<div><h1>@Model.CurrentCategory</h1></div>
+
+<div class="row">
+    @foreach (Product product in Model.Products)
+    {
+        @await Html.PartialAsync("_ProductCard", product)
+    }
+</div>

@@ -1,0 +1,12 @@
+﻿@model HomeViewModel
+
+@await Html.PartialAsync("_Carousel")
+
+<h2>Most sold instruments of the week</h2>
+
+<div class="row">
+    @foreach (var product in Model.ProductsOfTheWeek)
+    {
+        @await Html.PartialAsync("_ProductCard", product)
+    }
+</div>
